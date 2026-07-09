@@ -1,0 +1,35 @@
+{
+  "name": "creatorjobs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "preflight": "tsx scripts/preflight.ts",
+    "setup-webhook": "tsx scripts/setup-webhook.ts",
+    "seed": "tsx scripts/seed.ts",
+    "test:webhook-idempotency": "tsx scripts/test-webhook-idempotency.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.2",
+    "@whop/sdk": "^0.0.40",
+    "dotenv": "^17.4.2",
+    "next": "^15.5.20",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tsx": "^4.23.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^15.5.20",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^5.8.3"
+  }
+}

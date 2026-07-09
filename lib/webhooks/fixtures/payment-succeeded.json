@@ -1,0 +1,14 @@
+{
+  "type": "payment.succeeded",
+  "id": "msg_fixture_payment_succeeded_001",
+  "api_version": "v1",
+  "company_id": "biz_fixture_child",
+  "timestamp": "2026-07-09T12:00:00.000Z",
+  "data": {
+    "id": "pay_fixture_001",
+    "settlement_amount": 50.0,
+    "metadata": {
+      "order_id": "00000000-0000-4000-8000-000000000001"
+    }
+  }
+}
