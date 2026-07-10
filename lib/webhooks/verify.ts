@@ -11,7 +11,7 @@ export function verifyWhopWebhook(
   }
 
   const whop = createWhopClient();
-  return whop.webhooks.unwrap(rawBody, { headers, key: secret });
+  return whop.webhooks.unwrap(rawBody, { headers });
 }
 
 export function getWebhookMessageId(

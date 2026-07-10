@@ -11,10 +11,12 @@ export function getWhopBaseUrl(): string {
 }
 
 export function createWhopClient(): Whop {
+  const webhookSecret = env.whopWebhookSecret;
+
   return new Whop({
     apiKey: env.whopApiKey,
     baseURL: getWhopBaseUrl(),
-    webhookKey: env.whopWebhookSecret,
+    webhookKey: webhookSecret ? btoa(webhookSecret) : undefined,
   });
 }
 
