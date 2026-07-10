@@ -4,10 +4,22 @@ CreatorJobs is a minimal two-sided marketplace: businesses buy work from verifie
 
 ## Architecture
 
+```mermaid
+flowchart LR
+    Seller([Seller]) -->|onboard + list| CJ[CreatorJobs]
+    Buyer([Buyer]) -->|checkout| Whop[Whop]
+    Whop -.->|signed webhook| CJ
+    CJ -->|order paid| Buyer
+    CJ <--> DB[(Supabase)]
+    Ops([Ops]) --> CJ
+```
+
 ```text
 Buyer → CreatorJobs order (pending_payment) → Whop hosted checkout (seller child company)
      → Whop webhook (verified) → order paid → seller payout readiness → admin ops
 ```
+
+The dashed arrow is the key reliability property: an order only becomes `paid` when Whop's **signed webhook** arrives, never from the checkout redirect.
 
 Whop is source of truth for payments, verification, and payout state. Supabase is source of truth for sellers, listings, orders, and webhook records.
 
