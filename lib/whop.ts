@@ -10,13 +10,21 @@ export function getWhopBaseUrl(): string {
     : SANDBOX_BASE_URL;
 }
 
+function webhookKeyForSdk(secret: string | undefined): string | undefined {
+  if (!secret) return undefined;
+
+  // Standard Webhooks accepts whsec_-prefixed Base64 secrets directly.
+  // Whop may also display an unencoded secret, which its SDK expects as Base64.
+  return secret.startsWith("whsec_") ? secret : btoa(secret);
+}
+
 export function createWhopClient(): Whop {
   const webhookSecret = env.whopWebhookSecret;
 
   return new Whop({
     apiKey: env.whopApiKey,
     baseURL: getWhopBaseUrl(),
-    webhookKey: webhookSecret ? btoa(webhookSecret) : undefined,
+    webhookKey: webhookKeyForSdk(webhookSecret),
   });
 }
 

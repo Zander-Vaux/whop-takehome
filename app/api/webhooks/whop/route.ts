@@ -24,7 +24,14 @@ export async function POST(request: Request) {
   let event;
   try {
     event = verifyWhopWebhook(rawBody, headers);
-  } catch {
+  } catch (error) {
+    console.error("[whop] webhook verification failed", {
+      message: error instanceof Error ? error.message : String(error),
+      hasWebhookId: Boolean(headers["webhook-id"]),
+      hasWebhookTimestamp: Boolean(headers["webhook-timestamp"]),
+      hasWebhookSignature: Boolean(headers["webhook-signature"]),
+      secretFormat: secret.startsWith("whsec_") ? "whsec" : "raw",
+    });
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
   }
 
