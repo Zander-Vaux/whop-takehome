@@ -106,7 +106,6 @@ Three independent fields: `kyc_status`, `payout_method_linked`, `payout_eligible
 4. Order page stays pending until webhook
 5. `/sell/payouts` and `/admin` for ops
 
-Declined card: `4000 0000 0000 0002`
 
 Seed demo seller (optional):
 
