@@ -30,7 +30,7 @@ async function main(): Promise<void> {
   loadEnv();
 
   const apiKey = process.env.WHOP_API_KEY;
-  const platformCompanyId = process.env.WHOP_PLATFORM_COMPANY_ID;
+  let platformCompanyId = process.env.WHOP_PLATFORM_COMPANY_ID;
 
   console.log("CreatorJobs Whop preflight");
   console.log(`Environment: sandbox`);
@@ -45,16 +45,35 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  if (!platformCompanyId) {
-    printResult("WHOP_PLATFORM_COMPANY_ID present", false);
-    console.log("\n[HUMAN] Add WHOP_PLATFORM_COMPANY_ID to .env.local and re-run.");
-    process.exit(1);
-  }
-
   const client = new Whop({
     apiKey,
     baseURL: SANDBOX_BASE_URL,
   });
+
+  if (!platformCompanyId) {
+    console.log("WHOP_PLATFORM_COMPANY_ID missing — trying accounts.me()…");
+    try {
+      const me = await client.accounts.me();
+      platformCompanyId = me.id;
+      printResult("Detected platform company ID", true, me.id);
+      console.log(`\nAdd to .env.local:\nWHOP_PLATFORM_COMPANY_ID=${me.id}\n`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      printResult("WHOP_PLATFORM_COMPANY_ID present", false);
+      printResult("accounts.me (detect company ID)", false, message);
+      if (/403|forbidden|not authorized/i.test(message)) {
+        console.log(
+          "\n[HUMAN] Recreate your sandbox API key with the Admin role (or broader permissions)."
+        );
+        console.log(
+          "Or copy your company ID (biz_…) from sandbox.whop.com/dashboard into WHOP_PLATFORM_COMPANY_ID."
+        );
+      } else {
+        console.log("\n[HUMAN] Add WHOP_PLATFORM_COMPANY_ID to .env.local and re-run.");
+      }
+      process.exit(1);
+    }
+  }
 
   let allOk = true;
 
@@ -94,7 +113,7 @@ async function main(): Promise<void> {
     } else {
       const created = await client.companies.create({
         title: `CreatorJobs Preflight ${new Date().toISOString().slice(0, 10)}`,
-        email: `preflight+${Date.now()}@creatorjobs.dev`,
+        email: `creatorjobs.preflight.${Date.now()}@gmail.com`,
         parent_company_id: platformCompanyId,
         metadata: {
           [PREFLIGHT_METADATA_KEY]: "true",
