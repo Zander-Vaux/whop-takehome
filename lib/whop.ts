@@ -12,10 +12,11 @@ export function getWhopBaseUrl(): string {
 
 function webhookKeyForSdk(secret: string | undefined): string | undefined {
   if (!secret) return undefined;
+  const normalized = secret.trim();
 
   // Standard Webhooks accepts whsec_-prefixed Base64 secrets directly.
   // Whop may also display an unencoded secret, which its SDK expects as Base64.
-  return secret.startsWith("whsec_") ? secret : btoa(secret);
+  return normalized.startsWith("whsec_") ? normalized : btoa(normalized);
 }
 
 export function createWhopClient(): Whop {

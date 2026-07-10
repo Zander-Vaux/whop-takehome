@@ -11,7 +11,13 @@ export function verifyWhopWebhook(
   }
 
   const whop = createWhopClient();
-  return whop.webhooks.unwrap(rawBody, { headers });
+  try {
+    return whop.webhooks.unwrap(rawBody, { headers });
+  } catch {
+    // Some dashboard versions return an already Base64-formatted Standard
+    // Webhooks secret, while others return raw text that must be encoded.
+    return whop.webhooks.unwrap(rawBody, { headers, key: secret.trim() });
+  }
 }
 
 export function getWebhookMessageId(
